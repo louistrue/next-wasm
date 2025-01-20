@@ -3,10 +3,15 @@
 import { useState, useCallback, useEffect } from "react";
 import * as WebIFC from "web-ifc";
 
+interface IFCModelData {
+  modelID: number;
+  fileName: string;
+}
+
 export default function IFCParser() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [modelData, setModelData] = useState<any>(null);
+  const [modelData, setModelData] = useState<IFCModelData | null>(null);
   const [ifcApi, setIfcApi] = useState<WebIFC.IfcAPI | null>(null);
 
   // Initialize IFC API on component mount
@@ -26,13 +31,6 @@ export default function IFCParser() {
     };
 
     initAPI();
-
-    // Cleanup
-    return () => {
-      if (ifcApi) {
-        ifcApi.close();
-      }
-    };
   }, []);
 
   const handleFileUpload = useCallback(

@@ -30,8 +30,8 @@ interface IFCGroup extends THREE.Group {
 
 interface IFCProperty {
   Name?: { value: string };
-  NominalValue?: { value: any };
-  Value?: { value: any };
+  NominalValue?: { value: string | number | boolean };
+  Value?: { value: string | number | boolean };
   HasProperties?: IFCProperty[] | IFCProperty;
 }
 
@@ -198,8 +198,7 @@ class IFCViewer implements IFCViewerInstance {
 
       // Initialize IFC API
       console.log("Initializing IFC API...");
-      this.ifcAPI.SetWasmPath("/");
-      await this.ifcAPI.Init();
+      await this.ifcAPI.Init((file) => `/${file}`);
       console.log("IFC API initialized");
 
       // Setup picking
