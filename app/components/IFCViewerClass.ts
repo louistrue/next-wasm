@@ -198,9 +198,23 @@ class IFCViewer implements IFCViewerInstance {
 
       // Initialize IFC API
       console.log("Initializing IFC API...");
-      this.ifcAPI.SetWasmPath("/");
-      await this.ifcAPI.Init();
-      console.log("IFC API initialized");
+      try {
+        this.ifcAPI = new IfcAPI();
+
+        // Custom locateFile handler to ensure correct WASM path
+        const locateFile = (path: string) => {
+          console.log("Locating WASM file:", path);
+          return `/${path}`;
+        };
+
+        // Initialize with custom locateFile handler
+        await this.ifcAPI.Init(locateFile);
+
+        console.log("IFC API initialized successfully");
+      } catch (error) {
+        console.error("Error initializing IFC API:", error);
+        throw error;
+      }
 
       // Setup picking
       this.setupPicking();
